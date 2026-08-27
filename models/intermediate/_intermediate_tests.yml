@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: int_orders_enriched
+    description: "One row per order. All order-related facts aggregated to order grain before joining."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        data_tests: [not_null]
+      - name: order_revenue
+        data_tests: [not_null]
+      - name: order_month
+        data_tests: [not_null]
+
+  - name: int_customer_orders
+    description: "One row per person. Grouped on customer_unique_id, not customer_id."
+    columns:
+      - name: customer_unique_id
+        data_tests: [unique, not_null]
+      - name: total_orders
+        data_tests: [not_null]
+      - name: lifetime_revenue
+        data_tests: [not_null]
+
+  - name: int_order_items_enriched
+    description: "One row per line item, with product, seller and order context joined on."
+    columns:
+      - name: order_id
+        data_tests: [not_null]
+      - name: product_id
+        data_tests: [not_null]
+      - name: item_revenue
+        data_tests: [not_null]

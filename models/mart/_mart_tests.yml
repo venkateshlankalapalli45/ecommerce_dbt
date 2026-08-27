@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: mart_monthly_revenue
+    description: "Monthly marketplace performance. Excludes cancelled orders."
+    columns:
+      - name: order_month
+        data_tests: [unique, not_null]
+      - name: total_revenue
+        data_tests: [not_null]
+
+  - name: mart_customer_ltv
+    description: "Customer lifetime value with segmentation. Thresholds are business choices, not facts."
+    columns:
+      - name: customer_unique_id
+        data_tests: [unique, not_null]
+      - name: value_segment
+        data_tests:
+          - accepted_values:
+              values: ['high_value','mid_value','low_value','no_purchase']
+      - name: lifecycle_stage
+        data_tests:
+          - accepted_values:
+              values: ['active','at_risk','churned','never_purchased']
+
+  - name: mart_product_performance
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+      - name: total_revenue
+        data_tests: [not_null]
+
+  - name: mart_seller_performance
+    columns:
+      - name: seller_id
+        data_tests: [unique, not_null]
+      - name: total_revenue
+        data_tests: [not_null]

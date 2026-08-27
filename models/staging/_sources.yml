@@ -1,0 +1,16 @@
+﻿version: 2
+
+sources:
+  - name: raw
+    database: ECOMMERCE_DB
+    schema: RAW
+    description: Olist Brazilian e-commerce data, loaded once from CSV
+    tables:
+      - name: raw_customers
+      - name: raw_orders
+      - name: raw_order_items
+      - name: raw_order_payments
+      - name: raw_order_reviews
+      - name: raw_products
+      - name: raw_sellers
+      - name: raw_category_translation

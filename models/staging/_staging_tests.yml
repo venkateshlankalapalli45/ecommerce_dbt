@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "One row per customer_id. Note customer_id is order-scoped; customer_unique_id is the person."
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        data_tests: [not_null]
+      - name: customer_state
+        data_tests: [not_null]
+
+  - name: stg_orders
+    description: "One row per order."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: order_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['delivered','shipped','canceled','unavailable','invoiced','processing','created','approved']
+      - name: purchased_at
+        data_tests: [not_null]
+
+  - name: stg_order_items
+    description: "One row per line item."
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_id
+        data_tests: [not_null]
+      - name: seller_id
+        data_tests: [not_null]
+      - name: item_price
+        data_tests: [not_null]
+
+  - name: stg_order_payments
+    columns:
+      - name: order_id
+        data_tests: [not_null]
+      - name: payment_value
+        data_tests: [not_null]
+
+  - name: stg_order_reviews
+    description: "One row per review-to-order link. review_id is NOT unique: 789 survey responses are attached to two orders each, where a customer with two open orders answered once."
+    columns:
+      - name: review_id
+        data_tests:
+          - unique:
+              config:
+                severity: warn
+      - name: order_id
+        data_tests: [not_null]
+      - name: review_score
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [1,2,3,4,5]
+              quote: false
+
+  - name: stg_products
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: stg_sellers
+    columns:
+      - name: seller_id
+        data_tests: [unique, not_null]
+
+  - name: stg_category_translation
+    columns:
+      - name: category_name_pt
+        data_tests: [unique, not_null]
+      - name: category_name_en
+        data_tests: [not_null]
